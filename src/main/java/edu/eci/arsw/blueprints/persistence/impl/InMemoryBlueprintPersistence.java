@@ -8,11 +8,12 @@ import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service("inMemoryBlueprintPersistence")
 public class InMemoryBlueprintPersistence implements BlueprintsPersistence {
 
-    private final Map<Tuple<String, String>, Blueprint> blueprints = new HashMap<>();
+    private final Map<Tuple<String, String>, Blueprint> blueprints = new ConcurrentHashMap<>();
 
     public InMemoryBlueprintPersistence() {
         //Creando los puntos

@@ -1,0 +1,24 @@
+
+Condiciones de Carrera:
+ * Si algún usuario consulta la clase BluePrint o atributos de esta mientras otro usuario hace una
+   adición de BluePrint, se podrá generar una excepción ya que la consulta se corrompió.
+ * Mientras algún usuario hace la modificación de algún BluePrint, otro usuario está consultando,
+   en este caso se generarán excepciones ya que la clase ha sido modificada.
+ * Encontramos en la clase de persistencia una condicion de carrera esta puede ser evidenciada
+   cuando se realizan multiples peticiones sobre en HashMap de BluePrint. Para solucionar esto se
+   implementa un ConcurrentHashMap el cual me permite asegurar el thread safe ademas de un correcto
+   comportamiento con multiples procesos.
+
+Regiones Críticas:
+ * El acceso a la lista de funciones del BluePrint.
+ * El acceso a las consultas de los BluePrint.
+ * En la clase InMemoryCinemaPersistence en la cual se realizan diferentes operaciones de escritura
+ * En el metodo saveBluePrint, operaciones de lectura como en el metodo getBlueprintsByAuthor
+ * Finalmente operaciones de modificacion en el metodo updateBlueprint
+
+Solución Planteada:
+ * Crear un CopyOnWriteArrayList para lista de funciones del BluePrint.
+ * Realizar bloqueos de actualizaciones si se está usando la consulta.
+ * Realizar bloqueos de consultas si se están realizando actualizaciones.
+ * Cambiar el hashmap usado en la clase InMemoryBlueprintPersistence por un ConcurrentHashMap que nos
+   permite tener las mismas funcionalidades pero manteniendo la concurrencia.
