@@ -68,6 +68,25 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 
 
 5. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}, el cual retorne usando una representación jSON todos los planos realizados por el autor cuyo nombre sea {author}. Si no existe dicho autor, se debe responder con el código de error HTTP 404. Para esto, revise en [la documentación de Spring](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html), sección 22.3.2, el uso de @PathVariable. De nuevo, verifique que al hacer una petición GET -por ejemplo- a recurso http://localhost:8080/blueprints/juan, se obtenga en formato jSON el conjunto de planos asociados al autor 'juan' (ajuste esto a los nombres de autor usados en el punto 2).
+
+      ```java
+	@RestController
+	@RequestMapping(value = "/url-raiz-recurso")
+	public class XXController {
+    
+        
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> manejadorGetRecursoXX(){
+        try {
+            //obtener datos que se enviarán a través del API
+            return new ResponseEntity<>(data,HttpStatus.ACCEPTED);
+        } catch (XXException ex) {
+            Logger.getLogger(XXController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("Error bla bla bla",HttpStatus.NOT_FOUND);
+        }        
+	}
+
+	```
  
 ![](img/Pruebas/pruebapunto3.png)
 
@@ -78,6 +97,25 @@ Si no exite ningun plano
 
 
 6. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}/{bpname}, el cual retorne usando una representación jSON sólo UN plano, en este caso el realizado por {author} y cuyo nombre sea {bpname}. De nuevo, si no existe dicho autor, se debe responder con el código de error HTTP 404. 
+
+      ```java
+	@RestController
+	@RequestMapping(value = "/url-raiz-recurso")
+	public class XXController {
+    
+        
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> manejadorGetRecursoXX(){
+        try {
+            //obtener datos que se enviarán a través del API
+            return new ResponseEntity<>(data,HttpStatus.ACCEPTED);
+        } catch (XXException ex) {
+            Logger.getLogger(XXController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("Error bla bla bla",HttpStatus.NOT_FOUND);
+        }        
+	}
+
+	```
 
 ![](img/Pruebas/pruebaPunto5.png)
 
@@ -122,15 +160,57 @@ Si no exite ningun plano con ese author
 	
 
 	Nota: puede basarse en el formato jSON mostrado en el navegador al consultar una orden con el método GET.
+	
+	```	java
+	@RequestMapping(method = RequestMethod.POST)
+   	 public ResponseEntity<?> registrarPlano(@RequestBody Blueprint bp) {
+        try {
+            //registrar dato
+            bps.addNewBlueprint(bp);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (BlueprintPersistenceException ex) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("BLUEPRINT ERROR 409: " + ex.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+	```	
+	
 
 
 ![](img/Pruebas/Parte2PruebaPost.png)
 
 3. Teniendo en cuenta el autor y numbre del plano registrado, verifique que el mismo se pueda obtener mediante una petición GET al recurso '/blueprints/{author}/{bpname}' correspondiente.
+      ```java
+	@RequestMapping(value = "/{autor}/{nombrebp}", method = RequestMethod.GET)
+    	public ResponseEntity<?> consultarPlanosPorAutorYNombre(@PathVariable("autor") String autor, @PathVariable("nombrebp") String nombrebp) {
+        try {
+            return new ResponseEntity<>(bps.getBlueprint(autor, nombrebp), HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException ex) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("BLUEPRINT ERROR 404: " + ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    	}
+
+	```
 
 ![](img/Pruebas/Parte2PruebaGet.png)
 
 4. Agregue soporte al verbo PUT para los recursos de la forma '/blueprints/{author}/{bpname}', de manera que sea posible actualizar un plano determinado.
+
+
+      ```     java
+	@RequestMapping(value = "/{autor}/{nombrebp}", method = RequestMethod.PUT)
+    	public ResponseEntity<?> actualizarPlano(@PathVariable("autor") String autor, @PathVariable("nombrebp") String nombrebp, @RequestBody 		Blueprint bp) {
+        try {
+            bps.updateBlueprint(autor, nombrebp, bp);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BlueprintNotFoundException ex) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("BLUEPRINT ERROR 409: " + ex.getMessage(), HttpStatus.CONFLICT);
+        }
+    	}
+
+	```
 
 ![](img/Pruebas/Parte3PruebaPut.png)
 
