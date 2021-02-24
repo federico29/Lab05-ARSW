@@ -64,27 +64,27 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	Y luego enviando una petición GET a: http://localhost:8080/blueprints. Rectifique que, como respuesta, se obtenga un objeto jSON con una lista que contenga el detalle de los planos suministados por defecto, y que se haya aplicado el filtrado de puntos correspondiente.
 	
 
-![](img/PruebaPunto4.png)
+![](img/Pruebas/PruebaPunto4.png)
 
 
 5. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}, el cual retorne usando una representación jSON todos los planos realizados por el autor cuyo nombre sea {author}. Si no existe dicho autor, se debe responder con el código de error HTTP 404. Para esto, revise en [la documentación de Spring](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html), sección 22.3.2, el uso de @PathVariable. De nuevo, verifique que al hacer una petición GET -por ejemplo- a recurso http://localhost:8080/blueprints/juan, se obtenga en formato jSON el conjunto de planos asociados al autor 'juan' (ajuste esto a los nombres de autor usados en el punto 2).
  
-![](img/PruebaPunto3.png)
+![](img/Pruebas/PruebaPunto3.png)
 
 Si no exite ningun plano
 
 
-![](img/PruebaPunto3Parte2.png)
+![](img/Pruebas/PruebaPunto3Parte2.png)
 
 
 6. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}/{bpname}, el cual retorne usando una representación jSON sólo UN plano, en este caso el realizado por {author} y cuyo nombre sea {bpname}. De nuevo, si no existe dicho autor, se debe responder con el código de error HTTP 404. 
 
-![](img/PruebaPunto5.png)
+![](img/Pruebas/PruebaPunto5.png)
 
 Si no exite ningun plano con ese author
 
 
-![](img/PruebaPunto5Parte2.png)
+![](img/Pruebas/PruebaPunto5Parte2.png)
 
 
 
@@ -124,15 +124,15 @@ Si no exite ningun plano con ese author
 	Nota: puede basarse en el formato jSON mostrado en el navegador al consultar una orden con el método GET.
 
 
-![](img/Parte2PruebaPost.png)
+![](img/Pruebas/Parte2PruebaPost.png)
 
 3. Teniendo en cuenta el autor y numbre del plano registrado, verifique que el mismo se pueda obtener mediante una petición GET al recurso '/blueprints/{author}/{bpname}' correspondiente.
 
-![](img/Parte2PruebaGet.png)
+![](img/Pruebas/Parte2PruebaGet.png)
 
 4. Agregue soporte al verbo PUT para los recursos de la forma '/blueprints/{author}/{bpname}', de manera que sea posible actualizar un plano determinado.
 
-![](img/Parte3PruebaPut.png)
+![](img/Pruebas/Parte3PruebaPut.png)
 
 
 ### Parte III
