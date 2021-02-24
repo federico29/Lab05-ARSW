@@ -62,6 +62,18 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	
 	```
 	Y luego enviando una petición GET a: http://localhost:8080/blueprints. Rectifique que, como respuesta, se obtenga un objeto jSON con una lista que contenga el detalle de los planos suministados por defecto, y que se haya aplicado el filtrado de puntos correspondiente.
+	```java
+	@RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<?> consultarTodosLosPlanos() {
+        try {
+            return new ResponseEntity<>(bps.getAllBlueprints(), HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException ex) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("BLUEPRINT ERROR 404: " + ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+	```
 	
 
 ![](img/Pruebas/pruebaPunto4.png)
@@ -70,21 +82,15 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 5. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}, el cual retorne usando una representación jSON todos los planos realizados por el autor cuyo nombre sea {author}. Si no existe dicho autor, se debe responder con el código de error HTTP 404. Para esto, revise en [la documentación de Spring](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html), sección 22.3.2, el uso de @PathVariable. De nuevo, verifique que al hacer una petición GET -por ejemplo- a recurso http://localhost:8080/blueprints/juan, se obtenga en formato jSON el conjunto de planos asociados al autor 'juan' (ajuste esto a los nombres de autor usados en el punto 2).
 
       ```java
-	@RestController
-	@RequestMapping(value = "/url-raiz-recurso")
-	public class XXController {
-    
-        
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> manejadorGetRecursoXX(){
+	@RequestMapping(value = "/{autor}", method = RequestMethod.GET)
+    	public ResponseEntity<?> consultarPlanosPorAutor(@PathVariable("autor") String autor) {
         try {
-            //obtener datos que se enviarán a través del API
-            return new ResponseEntity<>(data,HttpStatus.ACCEPTED);
-        } catch (XXException ex) {
-            Logger.getLogger(XXController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>("Error bla bla bla",HttpStatus.NOT_FOUND);
-        }        
-	}
+            return new ResponseEntity<>(bps.getBlueprintsByAuthor(autor), HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException ex) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("BLUEPRINT ERROR 404: " + ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    	}
 
 	```
  
@@ -98,22 +104,16 @@ Si no exite ningun plano
 
 6. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}/{bpname}, el cual retorne usando una representación jSON sólo UN plano, en este caso el realizado por {author} y cuyo nombre sea {bpname}. De nuevo, si no existe dicho autor, se debe responder con el código de error HTTP 404. 
 
-      ```java
-	@RestController
-	@RequestMapping(value = "/url-raiz-recurso")
-	public class XXController {
-    
-        
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<?> manejadorGetRecursoXX(){
+      ``` java
+	@RequestMapping(value = "/{autor}/{nombrebp}", method = RequestMethod.GET)
+    	public ResponseEntity<?> consultarPlanosPorAutorYNombre(@PathVariable("autor") String autor, 		@PathVariable("nombrebp") String nombrebp) {
         try {
-            //obtener datos que se enviarán a través del API
-            return new ResponseEntity<>(data,HttpStatus.ACCEPTED);
-        } catch (XXException ex) {
-            Logger.getLogger(XXController.class.getName()).log(Level.SEVERE, null, ex);
-            return new ResponseEntity<>("Error bla bla bla",HttpStatus.NOT_FOUND);
-        }        
-	}
+            return new ResponseEntity<>(bps.getBlueprint(autor, nombrebp), HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException ex) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("BLUEPRINT ERROR 404: " + ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+   	}
 
 	```
 
